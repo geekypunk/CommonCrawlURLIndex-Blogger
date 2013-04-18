@@ -1,8 +1,0 @@
-#!/bin/bash
-for file in splits/*
-do
-	y=echo $file | cut -c7-9
-	echo $y
-	gnome-terminal -e python jsonParseSplit.py --file $y
-
-done
