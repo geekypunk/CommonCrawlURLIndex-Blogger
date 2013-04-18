@@ -1,0 +1,33 @@
+#!/usr/bin/python
+#Filename : helloworld.py
+from boto.s3.connection import S3Connection;
+from StringIO import StringIO
+from gzip import GzipFile
+
+
+print 'Listing all object in bucket "aws-publicdatasets"';
+conn = S3Connection('AKIAJ7RCWJDAISNDTA3Q', 'zZyEoH/9yYK0lFcf6/dvcLvzs6+/VzcPghE0uN/1');
+mybucket = conn.get_bucket('aws-publicdatasets'); # Substitute in your bucket name
+keyname = '/common-crawl/parse-output/segment/1346876860765/1346914453270_1432.arc.gz';
+L = mybucket.list();
+key = mybucket.lookup(keyname);
+
+start = 89174615;
+end = 89174615+1432;
+
+chunk = StringIO(
+    key.get_contents_as_string(headers={'Range': 'bytes=%s-%s' % (start, end)})
+)
+
+print GzipFile(fileobj=chunk).read()
+
+
+op = StringIO.StringIO();
+text = op.write(key.get_contents_as_string(headers={'Range': 'bytes=%s-%s' % (start, end)}));
+f=gzip.open(text,'rb');
+file_content=f.read();
+print file_content;
+
+#for item in L:
+#      print item;
+
